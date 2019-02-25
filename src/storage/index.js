@@ -163,9 +163,9 @@ function getFileContents(path: string, app: string, username: ?string, zoneFileL
       if (forceText || contentType === null
           || contentType.startsWith('text')
           || contentType === 'application/json') {
-        return response.text()
+        return { response: response.text(), contentType  };
       } else {
-        return response.arrayBuffer()
+        return { response: response.arrayBuffer(), contentType };
       }
     })
 }
@@ -331,14 +331,19 @@ export function getFile(path: string, options?: {
   }
 
   return getFileContents(path, opt.app, opt.username, opt.zoneFileLookupURL, !!opt.decrypt)
-    .then((storedContents) => {
+    .then(async function (res) {
+
+      const storedContents = await res.response;
+      const contentType = res.contentType;
+
       if (storedContents === null) {
         return storedContents
       } else if (opt.decrypt && !opt.verify) {
         if (typeof storedContents !== 'string') {
           throw new Error('Expected to get back a string for the cipherText')
         }
-        return decryptContent(storedContents)
+        //returns content-type and contents
+        return { content: decryptContent(storedContents), contentType  };
       } else if (opt.decrypt && opt.verify) {
         if (typeof storedContents !== 'string') {
           throw new Error('Expected to get back a string for the cipherText')
@@ -346,7 +351,8 @@ export function getFile(path: string, options?: {
         return handleSignedEncryptedContents(path, storedContents,
                                              opt.app, opt.username, opt.zoneFileLookupURL)
       } else if (!opt.verify && !opt.decrypt) {
-        return storedContents
+        //returns content-type and contents
+        return { content: storedContents, contentType };
       } else {
         throw new Error('Should be unreachable.')
       }
