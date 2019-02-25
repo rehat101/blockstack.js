@@ -2,10 +2,6 @@
 
 Added support for sending `content-type` headers on `getFile()` method 
 
-## Maintainer
-
-This repository is maintained by [yukan.id](https://explorer.blockstack.org/name/yukan.id).
-
 ## Testing
 
     $ npm run test
