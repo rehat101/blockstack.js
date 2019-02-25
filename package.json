@@ -2,7 +2,7 @@
   "name": "blockstack",
   "version": "18.3.0",
   "description": "The Blockstack Javascript library for authentication, identity, and storage.",
-  "main": "lib/index",
+  "main": "src/index",
   "scripts": {
     "browserify": "./node_modules/.bin/browserify lib/index.js --standalone blockstack -o ./dist/blockstack.js",
     "browserify-tests": "./node_modules/.bin/browserify lib/index.js --standalone blockstack -o ./tests/browserTests/bundle.js",
